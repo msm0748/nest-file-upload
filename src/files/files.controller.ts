@@ -20,7 +20,16 @@ export class FilesController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads',
+        destination: (req, file, callback) => {
+          const uploadPath = './uploads';
+
+          // 폴더가 없으면 생성
+          if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+          }
+
+          callback(null, uploadPath);
+        },
         filename: (req, file, callback) => {
           const originalName = Buffer.from(
             file.originalname,
