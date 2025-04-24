@@ -36,9 +36,13 @@ export class FilesController {
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const originalName = Buffer.from(file.originalname, 'latin1').toString(
+      'utf8',
+    );
+
     return {
       filename: file.filename,
-      originalname: file.originalname,
+      originalname: originalName,
       size: file.size,
       path: file.path,
     };
